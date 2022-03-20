@@ -72,7 +72,7 @@ main(
 	b.on_recv    = on_recv;
 	b.on_error   = on_error;
 
-	if (strcmp("UDP", argv[3]))
+	if (strcmp("UDP", argv[2]) == 0)
 		t = CONN_UDP;
 
 	server = conn_server_start(&b, atoi(argv[1]), t, NULL);

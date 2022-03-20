@@ -69,7 +69,7 @@ main(
 	recv.on_recv = on_recv;
 	recv.on_error = on_error;
 
-	if (strcmp("UDP", argv[3]))
+	if (strcmp("UDP", argv[3]) == 0)
 		t = CONN_UDP;
 	
 	ping = conn_connect(argv[1], atoi(argv[2]), t, &recv, NULL);
