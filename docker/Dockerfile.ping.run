@@ -1,0 +1,13 @@
+FROM gcc:11.2.0 AS builder
+WORKDIR /usr/connectlib
+RUN apt update && apt install build-essential -y
+ADD . /usr/connectlib
+
+FROM builder
+WORKDIR /usr/connectlib
+RUN make clean && make ping
+
+FROM debian:bookworm-slim
+WORKDIR /root/
+COPY --from=1 /usr/connectlib/ping /root/ping
+CMD ["/root/ping", "localhost", "12345"]  

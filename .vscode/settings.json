@@ -1,0 +1,7 @@
+{
+	"files.associations": {
+		"*.cuh": "cpp",
+		"*.cu": "cpp",
+		"util_sockets.h": "c"
+	}
+}

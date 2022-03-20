@@ -1,0 +1,10 @@
+FROM gcc:11.2.0 AS builder
+WORKDIR /usr/connectlib
+RUN apt update && apt install build-essential gdb valgrind -y
+ADD . /usr/connectlib
+
+FROM builder
+WORKDIR /usr/connectlib
+COPY ./docker/valgrind.sh /usr/connectlib/valgrind.sh
+RUN make clean && make DEBUG=1 test
+CMD ["/usr/connectlib/valgrind.sh"]
