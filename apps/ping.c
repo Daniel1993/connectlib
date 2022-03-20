@@ -55,9 +55,9 @@ main(
 	struct conn_bindings_ recv;
 	struct sigaction new_action;
 
-	if (argc < 3)
+	if (argc < 4)
 	{
-		printf("Usage %s <IP> <PORT>\n", argv[0]);
+		printf("Usage %s <IP> <PORT> <TCP|UDP>\n", argv[0]);
 		return 0;
 	}
 
@@ -68,6 +68,9 @@ main(
 	recv.on_waiting = on_waiting;
 	recv.on_recv = on_recv;
 	recv.on_error = on_error;
+
+	if (strcmp("UDP", argv[3]))
+		t = CONN_UDP;
 	
 	ping = conn_connect(argv[1], atoi(argv[2]), t, &recv, NULL);
 	
@@ -84,7 +87,6 @@ main(
 		conn_send(ping, msg, strlen(msg)+1);
 		sleep(1); // terminate with ctrl+c
 	}
-	printf("8\n");
 
 	conn_exit();
 	return 0;

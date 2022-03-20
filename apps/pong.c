@@ -58,9 +58,9 @@ main(
 	struct conn_server_bindings_ b;
 	struct sigaction new_action;
 
-	if (argc < 2)
+	if (argc < 3)
 	{
-		printf("usage: %s <PORT>\n", argv[0]);
+		printf("usage: %s <PORT> <TCP|UDP>\n", argv[0]);
 		return 0;
 	}
 
@@ -71,6 +71,9 @@ main(
 	b.on_waiting = on_waiting;
 	b.on_recv    = on_recv;
 	b.on_error   = on_error;
+
+	if (strcmp("UDP", argv[3]))
+		t = CONN_UDP;
 
 	server = conn_server_start(&b, atoi(argv[1]), t, NULL);
 	

@@ -10,4 +10,4 @@ RUN make clean && make ping
 FROM debian:bookworm-slim
 WORKDIR /root/
 COPY --from=1 /usr/connectlib/ping /root/ping
-CMD ["/root/ping", "localhost", "12345"]  
+CMD ["/root/ping", "localhost", "12345", "UDP"]  
