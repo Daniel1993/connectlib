@@ -23,7 +23,7 @@
 
 #define BUFFER_SIZE 128
 #define PORT_MASK 0xFFFF
-#define CHECK_PORT(_port) (_port == -1 ? 0x7FFF : _port & PORT_MASK)
+#define CHECK_PORT(_port) (_port == -1 ? 0 : _port & PORT_MASK)
 #define REPORT_ERROR fprintf(stderr, "%s:%d %s\n", __func__, __LINE__, strerror(errno))
 
 static int bind_addr(const char *hostname, long p, struct sockaddr_in *si);
@@ -242,7 +242,14 @@ util_socket_bind(
 ) {
 	uint16_t port = CHECK_PORT(p);
 	int err;
-	if (bind_addr(hostname, (long)port, &(sckt->si_local)))
+	if (!hostname)
+	{
+		memset(&sckt->si_local, 0, sizeof(sckt->si_local));
+		sckt->si_local.sin_family = AF_INET;
+		sckt->si_local.sin_addr.s_addr = htonl(INADDR_ANY);
+		sckt->si_local.sin_port = htons((uint16_t)p);
+	}
+	else if (bind_addr(hostname, (long)port, &(sckt->si_local)))
 		return -1;
 	while (-1 == (err = bind(sckt->socket, (struct sockaddr *)&sckt->si_local, sizeof(sckt->si_local))) || p == -1)
 	{
@@ -254,7 +261,6 @@ util_socket_bind(
 		{
 			close(sckt->socket);
 			REPORT_ERROR;
-			free(sckt);
 			return -1;
 		}
 		sckt->si_local.sin_port = htons(port);
@@ -564,26 +570,24 @@ bind_addr(
 	long p,
 	struct sockaddr_in *si
 ) {
-	static const char *DEFAULT = "localhost";
+	// static const char *DEFAULT = "localhost";
 	uint16_t port = CHECK_PORT(p);
-	si->sin_family = AF_INET;
-	si->sin_port = htons(port);
+	char s_port[BUFFER_SIZE];
 	struct addrinfo *res;
 	int error;
+
+	memset(si, 0, sizeof(struct sockaddr));
+	si->sin_family = AF_INET;
+	sprintf(s_port, "%u", port);
 	if (hostname)
-	{
-		error = getaddrinfo(hostname, NULL, NULL, &res);
-	}
-	else
-	{
-		error = getaddrinfo(DEFAULT, NULL, NULL, &res);
-	}
+		error = getaddrinfo(hostname, s_port, NULL, &res);
 	if (error)
 	{
 		fprintf(stderr, "error in getaddrinfo: %s\n", gai_strerror(error));
 		return -1;
 	}
 	si->sin_addr.s_addr = ((struct sockaddr_in *)(res->ai_addr))->sin_addr.s_addr;
+	si->sin_port = ((struct sockaddr_in *)(res->ai_addr))->sin_port;
 	freeaddrinfo(res);
 	return 0;
 }

@@ -62,7 +62,7 @@ void conn_exit();
 
 // the port is truncated at 16 bits
 // one can pass arguments into the server or on connection
-conn_server_s conn_server_start(conn_server_bindings_s,      long port, conn_server_type_e,           void *args);
+conn_server_s conn_server_start(conn_server_bindings_s,     long port, conn_server_type_e, void *args);
 int        conn_server_get_port(         conn_server_s);
 // in case of CONN_TCP, conn_connect will block until the connection can be established 
 conn_s        conn_connect     ( const char *host_name,      long port, conn_server_type_e, conn_bindings_s recv, void *args);
