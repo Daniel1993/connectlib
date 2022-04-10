@@ -5,9 +5,8 @@ ADD . /usr/connectlib
 
 FROM builder
 WORKDIR /usr/connectlib
-RUN make clean && make ping
+RUN make clean && make peer
 
 FROM debian:bookworm-slim
 WORKDIR /root/
-COPY --from=1 /usr/connectlib/ping /root/ping
-CMD ["/root/ping", "192.168.123.2", "12345", "TCP"]
+COPY --from=1 /usr/connectlib/peer /root/peer

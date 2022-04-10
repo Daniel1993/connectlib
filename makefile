@@ -31,6 +31,9 @@ libconn.a: $(OBJS)
 test: libconn.a tests/main.c
 	$(LD) -g -I ./include tests/main.c -o $@ -L . -l conn -pthread
 
+peer: libconn.a apps/peer.c
+	$(LD) -g -I ./include apps/peer.c -o $@ -L . -l conn -pthread
+
 ping: libconn.a apps/ping.c
 	$(LD) -g -I ./include apps/ping.c -o $@ -L . -l conn -pthread
 

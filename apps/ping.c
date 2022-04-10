@@ -21,7 +21,7 @@ static void on_stop(conn_peer_s p, conn_s c, double time_elapsed_ms, void *args)
 
 static void on_waiting(conn_peer_s p, conn_s c, double time_elapsed_ms, void *args)
 {
-	// printf("peer %s:%i: Waited %2.3fms without answer (%2.3fms since last call)!\n", p->name, p->port, p->time_since_ms, time_elapsed_ms);
+	printf("peer %s:%i: Waited %2.3fms without answer (%2.3fms since last call)!\n", p->name, p->port, p->time_since_ms, time_elapsed_ms);
 }
 
 static void on_recv(conn_peer_s p, conn_s c, void *buffer, long size, void *args)

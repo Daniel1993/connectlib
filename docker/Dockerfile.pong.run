@@ -10,4 +10,4 @@ RUN make clean && make pong
 FROM debian:bookworm-slim
 WORKDIR /root/
 COPY --from=1 /usr/connectlib/pong /root/pong
-CMD ["/root/pong", "12345", "UDP"]
+CMD ["/root/pong", "12345", "TCP"]
